@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useAuthState } from '../hooks/useAuthState';
-import { getUserCategories, getScrapsByCategory } from '../services/firestore';
+import { getUserCategories, getScrapsByCategory, deleteScrap } from '../services/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiBook, FiImage, FiType, FiLink, FiYoutube, FiUsers } from 'react-icons/fi';
 import AddScrapForm from './AddScrapForm';
@@ -19,7 +19,7 @@ function Scrapbook() {
   const [categories, setCategories] = useState([]);
   const [scraps, setScraps] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-  const [isLoading, setIsLoading] = useState(potrue);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
@@ -63,24 +63,28 @@ function Scrapbook() {
   setIsLoading(false);
   };
 
+  const handleDeleteScrap = async (scrapId) => {
+  if (window.confirm('스크랩을 삭제하시겠습니까?')) {
+    await deleteScrap(scrapId);
+    fetchScraps(); // 목록 새로고침
+  }
+};
+
   return (
     <div className="scrapbook-container">
-      {/* --- 사이드바 카테고리 목록 --- */}
-      <aside className="sidebar">
-        <h3>Categories</h3>
-        <ul>
+      <section className="main-content room-view">
+        {/* --- 상단 카테고리 탭 --- */}
+        <div className="category-tabs">
           {categories.map(cat => (
-            <li 
-              key={cat.id} 
-              className={selectedCategoryId === cat.id ? 'active' : ''}
+            <button
+              key={cat.id}
+              className={`category-tab ${selectedCategoryId === cat.id ? 'active' : ''}`}
               onClick={() => setSelectedCategoryId(cat.id)}
             >
               {cat.name}
-            </li>
+            </button>
           ))}
-        </ul>
-      </aside>
-      <section className="main-content room-view">
+        </div>
         <AnimatePresence mode="wait">
           <motion.h2 key={selectedCategory?.id || 'loading'} initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}>
             {selectedCategory ? selectedCategory.name : '카테고리를 선택하세요'}
@@ -101,8 +105,7 @@ function Scrapbook() {
           <p>스크랩을 불러오는 중...</p>
         ) : scraps.length === 0 ? (
           <div className="empty-state">
-            <p>아직 추가된 스크랩이 없습니다.</p>
-            <p>첫 번째 스크랩을 추가해보세요!</p>
+            <p>첫 스크랩을 추가해보세요!</p>
           </div>
         ) : (
           <div className="room-layout">
@@ -122,15 +125,14 @@ function Scrapbook() {
                 <div className="room-item-scraps">
                   {/* --- 스크랩 목록 렌더링 --- */}
                   {items.map(scrap => (
-                    <motion.div 
-                      key={scrap.id} 
-                      className="scrap-item-card"
-                      whileHover={{ scale: 1.03 }}
-                    >
-                      <a href={scrap.data.url} target="_blank" rel="noopener noreferrer">
-                        {scrap.data.title}
-                      </a>
-                      {scrap.data.memo && <p>{scrap.data.memo}</p>}
+                    <motion.div key={scrap.id} className="scrap-item-card">
+                      <div className="scrap-content">
+                        {scrap.data.memo && <p>{scrap.data.memo}</p>}
+                        <a href={scrap.data.url} target="_blank" rel="noopener noreferrer">
+                          {scrap.data.title}
+                        </a>
+                      </div>
+                      <button onClick={() => handleDeleteScrap(scrap.id)} className="delete-btn">×</button>
                     </motion.div>
                   ))}
                 </div>

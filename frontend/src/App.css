@@ -47,6 +47,11 @@
   text-align: center;
   margin: 0 0 1.5rem 0;
 }
+/* .login-container h3 {
+  text-align: center;
+  margin: 0 0 1.3rem 0;
+  font-size: 16px;
+} */
 .login-container input {
   padding: 14px;
   border-radius: var(--border-radius);
@@ -122,6 +127,35 @@
   border-radius: 20px;
   font-size: 0.8rem;
   font-weight: 700;
+}
+
+.category-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  overflow-x: auto; /* 카테고리가 많아지면 가로 스크롤 */
+}
+.category-tab {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap; /* 카테고리 이름 줄바꿈 방지 */
+  transition: all 0.2s ease;
+}
+.category-tab:hover {
+  background-color: var(--bg-main);
+}
+.category-tab.active {
+  background-color: var(--accent-blue);
+  color: white;
+  border-color: var(--accent-blue);
+  font-weight: 500;
 }
 
 /* --- 반응형 UI --- */
@@ -246,14 +280,63 @@
   border-radius: var(--border-radius);
   margin-bottom: 0.75rem;
   transition: background-color 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* 버튼과 콘텐츠의 높이가 달라도 위쪽으로 정렬 */
+  gap: 1rem; /* 콘텐츠와 버튼 사이 간격 */
 }
+
+.scrap-content {
+  flex-grow: 1;
+}
+.delete-btn {
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  flex-shrink: 0; /* 버튼 크기가 줄어들지 않도록 설정 */
+  transition: all 0.2s ease;
+}
+.delete-btn:hover {
+  background-color: #ff6b6b;
+  color: white;
+  border-color: #ff6b6b;
+}
+
 .scrap-item-card a {
   color: var(--text-primary);
   text-decoration: none;
   font-weight: 500;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 .scrap-item-card p {
   font-size: 0.9rem;
   color: var(--text-secondary);
   margin: 0.5rem 0 0 0;
+}
+
+.scrap-content {
+  flex-grow: 1;
+}
+.delete-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0 0.5rem;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+.delete-btn:hover {
+  opacity: 1;
+  color: #ff6b6b;
 }

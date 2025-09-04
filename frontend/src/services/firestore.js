@@ -1,5 +1,5 @@
 import { db, storage } from '../firebase';
-import { doc, getDoc, setDoc, collection, addDoc, query, where, getDocs, orderBy, serverTimestamp, writeBatch } from 'firebase/firestore';
+import { getDoc, setDoc, collection, addDoc, query, where, getDocs, orderBy, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 // --- 1. 사용자 온보딩 및 프로필 로직 ---
@@ -125,4 +125,17 @@ export const uploadImage = async (userId, file) => {
   await uploadBytes(storageRef, file);
   const downloadURL = await getDownloadURL(storageRef);
   return downloadURL;
+};
+
+import { doc, deleteDoc } from 'firebase/firestore'; // deleteDoc import 추가
+
+// ... 기존 함수들 ...
+
+/**
+ * ID를 이용해 스크랩 문서 삭제
+ * @param {string} scrapId - 삭제할 스크랩의 문서 ID
+ */
+export const deleteScrap = async (scrapId) => {
+  const scrapRef = doc(db, 'scraps', scrapId);
+  await deleteDoc(scrapRef);
 };

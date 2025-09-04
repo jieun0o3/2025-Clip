@@ -32,7 +32,8 @@ function Login() {
 
   return (
     <div className="login-container">
-      <h2>Clip 로그인</h2>
+      <h2>Clip</h2>
+      {/* <h3>나의 작은 스크랩북</h3> */}
       <input
         type="email"
         placeholder="이메일"
