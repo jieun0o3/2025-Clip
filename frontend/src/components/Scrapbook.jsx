@@ -3,6 +3,7 @@ import { useAuthState } from '../hooks/useAuthState';
 import { getUserCategories, getScrapsByCategory } from '../services/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiBook, FiImage, FiType, FiLink, FiYoutube, FiUsers } from 'react-icons/fi';
+import AddScrapForm from './AddScrapForm';
 
 const scrapTypeIcons = {
   link: <FiLink />,
@@ -18,7 +19,7 @@ function Scrapbook() {
   const [categories, setCategories] = useState([]);
   const [scraps, setScraps] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(potrue);
 
   useEffect(() => {
     if (!user) return;
@@ -54,13 +55,20 @@ function Scrapbook() {
   }, [scraps]);
 
   const selectedCategory = categories.find(c => c.id === selectedCategoryId);
+  const fetchScraps = async () => {
+  if (!selectedCategoryId) return;
+  setIsLoading(true);
+  const categoryScraps = await getScrapsByCategory(selectedCategoryId);
+  setScraps(categoryScraps);
+  setIsLoading(false);
+  };
 
   return (
     <div className="scrapbook-container">
+      {/* --- 사이드바 카테고리 목록 --- */}
       <aside className="sidebar">
         <h3>Categories</h3>
         <ul>
-          {/* --- 사이드바 카테고리 목록 --- */}
           {categories.map(cat => (
             <li 
               key={cat.id} 
@@ -78,6 +86,15 @@ function Scrapbook() {
             {selectedCategory ? selectedCategory.name : '카테고리를 선택하세요'}
           </motion.h2>
         </AnimatePresence>
+
+        {/* --- 스크랩 추가 폼 --- */}
+        {selectedCategory && (
+          <AddScrapForm
+            user={user}
+            categoryId={selectedCategoryId}
+            onScrapAdded={fetchScraps}
+          />
+        )}
 
         {/* --- 스크랩이 없을 때 안내 메시지 추가 --- */}
         {isLoading ? (
@@ -103,7 +120,19 @@ function Scrapbook() {
                   <span>{items.length}</span>
                 </div>
                 <div className="room-item-scraps">
-                  {/* TODO: 스크랩 내용 표시 */}
+                  {/* --- 스크랩 목록 렌더링 --- */}
+                  {items.map(scrap => (
+                    <motion.div 
+                      key={scrap.id} 
+                      className="scrap-item-card"
+                      whileHover={{ scale: 1.03 }}
+                    >
+                      <a href={scrap.data.url} target="_blank" rel="noopener noreferrer">
+                        {scrap.data.title}
+                      </a>
+                      {scrap.data.memo && <p>{scrap.data.memo}</p>}
+                    </motion.div>
+                  ))}
                 </div>
               </motion.div>
             ))}
