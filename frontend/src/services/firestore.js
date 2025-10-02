@@ -1,9 +1,7 @@
 import { db, storage } from '../firebase';
 import { getDoc, setDoc, collection, addDoc, query, where, getDocs, orderBy, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { 
-  collection, addDoc, serverTimestamp,getDocs, query, where, writeBatch,doc,deleteDoc,updateDoc
-} from 'firebase/firestore';
+import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { db } from '../firebase';
 
 /**
@@ -144,9 +142,16 @@ export const addScrap = async (userId, categoryId, scrapData) => {
  * @param {string} categoryId
  * @returns {Promise<Array>}
  */
-export const getScrapsByCategory = async (categoryId) => {
-  const scrapsCol = collection(db, 'scraps');
-  const q = query(scrapsCol, where('categoryId', '==', categoryId), orderBy('createdAt', 'desc'));
+export const getScrapsByCategory = async (userId, categoryId) => {
+  // userId 인자를 받도록 수정
+  const scrapsRef = collection(db, 'scraps');
+  const q = query(
+    scrapsRef,
+    where('userId', '==', userId),
+    where('categoryId', '==', categoryId),
+    orderBy('createdAt', 'desc') // 최신순으로 정렬
+  );
+
   const querySnapshot = await getDocs(q);
   return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 };

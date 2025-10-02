@@ -24,34 +24,55 @@ function Scrapbook() {
   const [isLoading, setIsLoading] = useState(true);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
-  useEffect(() => {
-    // 카테고리 목록을 다시 불러옴
-    const fetchCategories = useCallback(async () => {
-    if (!user) return;
+  
+// 1. fetchCategories 함수를 useCallback을 이용해 컴포넌트 최상단에 정의합니다.
+const fetchCategories = useCallback(async () => {
+  if (!user) {
+    // 로그아웃 상태일 경우 카테고리 목록을 비웁니다.
+    setCategories([]);
+    return;
+  }
+  
+  try {
     const userCategories = await getUserCategories(user.uid);
     setCategories(userCategories);
-    // 카테고리 삭제 후 첫 번째 카테고리를 선택
+    
+    // 카테고리 삭제 또는 변경 후 선택된 ID가 유효하지 않을 때, 첫 번째 카테고리를 기본값으로 선택
     if (userCategories.length > 0 && !userCategories.find(c => c.id === selectedCategoryId)) {
       setSelectedCategoryId(userCategories[0].id);
     } else if (userCategories.length === 0) {
-      // 카테고리가 모두 삭제된 경우
+      // 카테고리가 하나도 없을 경우
       setSelectedCategoryId(null);
       setScraps([]);
     }
-  }, [user, selectedCategoryId]);
-    fetchCategories();
-  }, [user]);
+  } catch (error) {
+      console.error("카테고리를 불러오는 중 오류가 발생했습니다:", error);
+  }
+}, [user, selectedCategoryId]);
 
-  useEffect(() => {
-    if (!selectedCategoryId) return;
+// 2. useEffect를 사용해 함수를 실행합니다.
+useEffect(() => {
+  // 사용자 정보나 선택된 카테고리가 없으면 실행하지 않음
+  if (!user || !selectedCategoryId) {
+    setScraps([]);
+    return;
+  }
+
+  const fetchScraps = async () => {
     setIsLoading(true);
-    const fetchScraps = async () => {
-      const categoryScraps = await getScrapsByCategory(selectedCategoryId);
+    try {
+      // user.uid를 getScrapsByCategory 함수에 전달
+      const categoryScraps = await getScrapsByCategory(user.uid, selectedCategoryId);
       setScraps(categoryScraps);
+    } catch (error) {
+      console.error("스크랩을 불러오는 중 오류가 발생했습니다:", error);
+    } finally {
       setIsLoading(false);
-    };
-    fetchScraps();
-  }, [selectedCategoryId]);
+    }
+  };
+
+  fetchScraps();
+}, [user, selectedCategoryId]);
 
   const groupedScraps = useMemo(() => {
     return scraps.reduce((acc, scrap) => {
@@ -60,21 +81,19 @@ function Scrapbook() {
       acc[type].push(scrap);
       return acc;
     }, {});
-  }, [scraps]);
+  }, [scraps]);;
 
-  const selectedCategory = categories.find(c => c.id === selectedCategoryId);
-  const fetchScraps = async () => {
-  if (!selectedCategoryId) return;
-  setIsLoading(true);
-  const categoryScraps = await getScrapsByCategory(selectedCategoryId);
-  setScraps(categoryScraps);
-  setIsLoading(false);
-  };
+  // 목록 새로고침 함수
+const refreshScraps = () => {
+    const currentId = selectedCategoryId;
+    setSelectedCategoryId(null); 
+    setTimeout(() => setSelectedCategoryId(currentId), 0);
+}
 
-  const handleDeleteScrap = async (scrapId) => {
+const handleDeleteScrap = async (scrapId) => {
   if (window.confirm('스크랩을 삭제하시겠습니까?')) {
     await deleteScrap(scrapId);
-    fetchScraps(); // 목록 새로고침
+    refreshScraps(); // 목록 새로고침 함수 호출
   }
 };
 
@@ -112,7 +131,7 @@ function Scrapbook() {
           <AddScrapForm
             user={user}
             categoryId={selectedCategoryId}
-            onScrapAdded={fetchScraps}
+            onScrapAdded={refreshScraps}
           />
         )}
 
