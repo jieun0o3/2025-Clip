@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useAuthState } from '../hooks/useAuthState';
 import { getUserCategories, getScrapsByCategory, deleteScrap } from '../services/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiBook, FiImage, FiType, FiLink, FiYoutube, FiUsers } from 'react-icons/fi';
 import AddScrapForm from './AddScrapForm';
+import { FiPlusCircle } from 'react-icons/fi';
+import CategoryManager from './CategoryManager';
 
 const scrapTypeIcons = {
   link: <FiLink />,
@@ -20,17 +22,23 @@ function Scrapbook() {
   const [scraps, setScraps] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
 
   useEffect(() => {
+    // 카테고리 목록을 다시 불러옴
+    const fetchCategories = useCallback(async () => {
     if (!user) return;
-    const fetchCategories = async () => {
-      const userCategories = await getUserCategories(user.uid);
-      setCategories(userCategories);
-      if (userCategories.length > 0) {
-        setSelectedCategoryId(currentId => currentId || userCategories[0].id);
-      }
-      setIsLoading(false);
-    };
+    const userCategories = await getUserCategories(user.uid);
+    setCategories(userCategories);
+    // 카테고리 삭제 후 첫 번째 카테고리를 선택
+    if (userCategories.length > 0 && !userCategories.find(c => c.id === selectedCategoryId)) {
+      setSelectedCategoryId(userCategories[0].id);
+    } else if (userCategories.length === 0) {
+      // 카테고리가 모두 삭제된 경우
+      setSelectedCategoryId(null);
+      setScraps([]);
+    }
+  }, [user, selectedCategoryId]);
     fetchCategories();
   }, [user]);
 
@@ -84,11 +92,19 @@ function Scrapbook() {
               {cat.name}
             </button>
           ))}
+          <button className="category-manage-btn" onClick={() => setIsCategoryModalOpen(true)}>
+            <FiPlusCircle /> 카테고리 관리
+          </button>
         </div>
         <AnimatePresence mode="wait">
-          <motion.h2 key={selectedCategory?.id || 'loading'} initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 20 }}>
-            {selectedCategory ? selectedCategory.name : '카테고리를 선택하세요'}
-          </motion.h2>
+          {isCategoryModalOpen && (
+            <CategoryManager
+              user={user}
+              currentCategories={categories}
+              onClose={() => setIsCategoryModalOpen(false)}
+              onUpdate={fetchCategories} // 카테고리 변경 후 목록 새로고침
+            />
+          )}
         </AnimatePresence>
 
         {/* --- 스크랩 추가 폼 --- */}

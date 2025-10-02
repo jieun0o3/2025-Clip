@@ -340,3 +340,136 @@
   opacity: 1;
   color: #ff6b6b;
 }
+
+/* --- Category Manager Modal Styles --- */
+
+/* 모달 뒷배경 */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+/* 모달 본문 */
+.modal-content {
+  background-color: var(--bg-main);
+  padding: 2rem;
+  border-radius: var(--border-radius-large, 12px); /* 더 큰 border-radius가 어울릴 수 있음 */
+  box-shadow: var(--shadow-large, 0 10px 25px rgba(0,0,0,0.1));
+  width: 90%;
+  max-width: 500px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.modal-content h2 {
+  margin: 0;
+  color: var(--text-primary);
+}
+
+.category-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.category-box h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* 현재 나의 카테고리 아이템 */
+.category-item-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--bg-secondary);
+  padding: 8px 12px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+}
+
+.delete-category-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.delete-category-btn:hover {
+  color: #ff6b6b;
+}
+
+/* 추천 카테고리 칩 */
+.add-category-chip {
+  background-color: transparent;
+  border: 1px dashed var(--border-color);
+  color: var(--text-secondary);
+  padding: 8px 12px;
+  border-radius: 20px; /* 둥근 모양 */
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-category-chip:hover {
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+  background-color: rgba(79, 132, 255, 0.1);
+}
+
+/* 새 카테고리 추가 폼 */
+.add-category-form {
+  display: flex;
+  gap: 10px;
+}
+
+.add-category-form input {
+  flex-grow: 1;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  background-color: var(--bg-secondary);
+}
+
+.add-category-form button,
+.close-modal-btn {
+  padding: 0 20px;
+  height: 46px; /* input 높이와 맞춤 */
+  border: none;
+  border-radius: var(--border-radius);
+  background-color: var(--accent-blue);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* 닫기 버튼 스타일 */
+.close-modal-btn {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  margin-top: 1rem;
+}

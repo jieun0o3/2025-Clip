@@ -1,9 +1,47 @@
 import { db, storage } from '../firebase';
 import { getDoc, setDoc, collection, addDoc, query, where, getDocs, orderBy, serverTimestamp, writeBatch } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { 
+  collection, addDoc, serverTimestamp,getDocs, query, where, writeBatch,doc,deleteDoc,updateDoc
+} from 'firebase/firestore';
+import { db } from '../firebase';
+
+/**
+ * 카테고리 삭제 시 스크랩들을 다른 카테고리로 이동시키는 함수
+ * @param {string} userId
+ * @param {string} categoryIdToDelete
+ * @param {string} targetCategoryId
+ */
+
+export const moveScrapsAndDeleteCategory = async (userId, categoryIdToDelete, targetCategoryId) => {
+  if (!userId || !categoryIdToDelete || !targetCategoryId) {
+    throw new Error("필수 인자가 누락되었습니다.");
+  }
+  
+  const scrapsRef = collection(db, 'scraps');
+  const q = query(scrapsRef, where('userId', '==', userId), where('categoryId', '==', categoryIdToDelete));
+  
+  const scrapDocs = await getDocs(q);
+  
+  if (!scrapDocs.empty) {
+    // 이동할 스크랩이 있는 경우
+    const batch = writeBatch(db);
+    scrapDocs.forEach(scrapDoc => {
+      const scrapRef = doc(db, 'scraps', scrapDoc.id);
+      // categoryId 필드를 새로운 카테고리 ID로 업데이트
+      batch.update(scrapRef, { categoryId: targetCategoryId });
+    });
+    // 배치 작업을 통해 모든 스크랩을 한 번에 이동
+    await batch.commit();
+  }
+  
+  // 스크랩 이동이 완료된 후 또는 원래 스크랩이 없었던 경우, 기존 카테고리를 삭제
+  const categoryRef = doc(db, 'users', userId, 'categories', categoryIdToDelete);
+  await deleteDoc(categoryRef);
+};
+
 
 // --- 1. 사용자 온보딩 및 프로필 로직 ---
-
 /**
  * 사용자가 처음 로그인했는지 확인, 첫 로그인이라면 프로필 생성
  * @param {object} user
@@ -52,12 +90,11 @@ export const getUserCategories = async (userId) => {
 
 /**
  * 새로운 카테고리 추가
- * @param {string} userId
+ * @param {string} userId 
  * @param {string} categoryName 새 카테고리 이름
  */
 export const addCategory = async (userId, categoryName) => {
-  await addDoc(collection(db, 'categories'), {
-    userId: userId,
+  await addDoc(collection(db, 'users', userId, 'categories'), {
     name: categoryName,
     createdAt: serverTimestamp(),
   });
@@ -70,7 +107,7 @@ export const addCategory = async (userId, categoryName) => {
  */
 export const addInitialCategories = async (userId, categoryNames) => {
     const batch = writeBatch(db);
-    const categoriesCol = collection(db, 'categories');
+    const categoriesCol = collection(db, 'users', userId, 'categories');
 
     categoryNames.forEach(name => {
         const newCategoryRef = doc(categoriesCol);
@@ -138,4 +175,11 @@ import { doc, deleteDoc } from 'firebase/firestore'; // deleteDoc import 추가
 export const deleteScrap = async (scrapId) => {
   const scrapRef = doc(db, 'scraps', scrapId);
   await deleteDoc(scrapRef);
+};
+
+// 카테고리 삭제
+export const deleteCategory = async (userId, categoryId) => {
+  // 경고: 이 카테고리에 속한 스크랩들은 어떻게 처리할지 정책 결정이 필요합니다.
+  // 우선은 카테고리만 삭제하고, 스크랩은 그대로 두는 방식으로 구현합니다.
+  await deleteDoc(doc(db, 'users', userId, 'categories', categoryId));
 };

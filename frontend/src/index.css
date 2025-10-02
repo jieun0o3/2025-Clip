@@ -19,3 +19,79 @@ body {
   background-color: var(--bg-main);
   color: var(--text-primary);
 }
+
+/* --- Category Manager Modal Styles 에 추가 --- */
+
+/* 나의 카테고리 목록을 세로로 정렬 */
+.category-list-vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* 관리 UI 내의 카테고리 아이템 */
+.category-item-wrapper-manage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 양쪽 끝으로 정렬 */
+  background-color: var(--bg-secondary);
+  padding: 10px 15px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  width: 100%;
+  box-sizing: border-box; /* 패딩 포함 크기 계산 */
+}
+
+/* 삭제 확인 UI 전체 컨테이너 */
+.delete-confirm-ui {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap; /* 작은 화면에서 줄바꿈 */
+  align-items: center;
+  gap: 10px;
+}
+
+.delete-confirm-label {
+  flex-basis: 100%; /* 라벨은 항상 한 줄 전체 차지 */
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 5px;
+}
+
+/* 카테고리 선택 드롭다운 */
+.category-select {
+  flex-grow: 1; /* 남는 공간 모두 차지 */
+  padding: 8px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-main);
+}
+
+/* 확인/취소 버튼 그룹 */
+.delete-confirm-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.confirm-btn, .cancel-btn {
+  padding: 8px 12px;
+  border-radius: var(--border-radius);
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.confirm-btn {
+  background-color: #ff6b6b; /* 위험한 작업 강조 */
+  color: white;
+}
+.confirm-btn:disabled {
+  background-color: var(--border-color);
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
