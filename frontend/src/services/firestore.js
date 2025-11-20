@@ -60,14 +60,21 @@ export const moveScrapsAndDeleteCategory = async (userId, categoryIdToDelete, ta
  * @returns {Promise<Array>} 카테고리 객체 배열
  */
 export const getUserCategories = async (userId) => {
-  const sessionRef = doc(db, 'sessions', userId);
-  const sessionSnap = await getDoc(sessionRef);
+  try {
+    const sessionRef = doc(db, 'sessions', userId);
+    const sessionSnap = await getDoc(sessionRef);
   if (sessionSnap.exists() && sessionSnap.data().categories) {
     // Onboarding에서 저장한 카테고리 배열 반환
     const categoryNames = sessionSnap.data().categories;
-  return categoryNames.map(name => ({ id: name, name: name }));
+    return categoryNames.map(name => ({ id: name, name: name }));
   }
-  return [];
+    return []; // 문서가 없거나 필드가 없으면 빈 배열 반환
+  }
+   catch (error) {
+    // 권한 오류 발생 시, Console에 userId와 경로를 찍기
+    console.error(`Firebase Read Error for sessions/${userId}:`, error);
+    throw error;
+  }
 };
 
 /**
