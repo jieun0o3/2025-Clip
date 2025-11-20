@@ -5,7 +5,7 @@ import { FiX, FiPlus } from 'react-icons/fi';
 
 const DEFAULT_CATEGORIES = ['대외활동', '장학금', '여행', '알바', '주식', '채용공고'];
 
-function CategoryManager({ user, currentCategories, onClose, onUpdate }) {
+function CategoryManager({ userId, currentCategories, onClose, onUpdate }) {
   const [newCategoryName, setNewCategoryName] = useState('');
   
   // --- 삭제 UI를 위한 상태 추가 ---
@@ -21,7 +21,7 @@ function CategoryManager({ user, currentCategories, onClose, onUpdate }) {
   const handleAddCategory = async (name) => {
     if (!name.trim() || isProcessing) return;
     setIsProcessing(true);
-    await addCategory(user.uid, name.trim());
+    await addCategory(userId, name.trim());
     setNewCategoryName('');
     onUpdate(); // 부모 컴포넌트에 변경사항 알림
     setIsProcessing(false);
@@ -49,7 +49,7 @@ function CategoryManager({ user, currentCategories, onClose, onUpdate }) {
 
     setIsProcessing(true);
     try {
-      await moveScrapsAndDeleteCategory(user.uid, deletingCategoryId, moveTargetCategoryId);
+      await moveScrapsAndDeleteCategory(userId, deletingCategoryId, moveTargetCategoryId);
       onUpdate(); // 목록 새로고침
       cancelDeletion(); // 상태 초기화
     } catch (error) {

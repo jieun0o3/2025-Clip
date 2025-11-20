@@ -1,8 +1,21 @@
 import { db, storage } from '../firebase';
-import { getDoc, setDoc, collection, addDoc, query, where, getDocs, orderBy, serverTimestamp, writeBatch } from 'firebase/firestore';
+import { 
+  getDoc, 
+  setDoc, 
+  collection, 
+  addDoc, 
+  query, 
+  where, 
+  getDocs, 
+  orderBy, 
+  serverTimestamp, 
+  writeBatch,
+  doc,
+  deleteDoc,
+  arrayUnion, 
+  arrayRemove
+} from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
-import { db } from '../firebase';
 
 /**
  * 카테고리 삭제 시 스크랩들을 다른 카테고리로 이동시키는 함수
@@ -32,58 +45,29 @@ export const moveScrapsAndDeleteCategory = async (userId, categoryIdToDelete, ta
     // 배치 작업을 통해 모든 스크랩을 한 번에 이동
     await batch.commit();
   }
-  
-  // 스크랩 이동이 완료된 후 또는 원래 스크랩이 없었던 경우, 기존 카테고리를 삭제
-  const categoryRef = doc(db, 'users', userId, 'categories', categoryIdToDelete);
-  await deleteDoc(categoryRef);
+    // 스크랩 이동이 완료된 후, sessions 문서에서 해당 카테고리를 배열에서 제거
+    const sessionRef = doc(db, 'sessions', userId);
+    // categories 배열에서 categoryIdToDelete를 제거
+    await setDoc(sessionRef, {
+        categories: arrayRemove(categoryIdToDelete) 
+    }, { merge: true });
 };
-
-
-// --- 1. 사용자 온보딩 및 프로필 로직 ---
-/**
- * 사용자가 처음 로그인했는지 확인, 첫 로그인이라면 프로필 생성
- * @param {object} user
- * @returns {Promise<object>}
- */
-export const checkAndCreateUserProfile = async (user) => {
-  const userRef = doc(db, 'users', user.uid);
-  const userSnap = await getDoc(userRef);
-
-  if (!userSnap.exists()) {
-    // 새로운 사용자 -> 프로필 문서 생성
-    await setDoc(userRef, {
-      email: user.email,
-      createdAt: serverTimestamp(),
-      hasCompletedOnboarding: false, // 온보딩 미완료 상태
-    });
-    const newUserSnap = await getDoc(userRef);
-    return newUserSnap.data();
-  }
-  return userSnap.data();
-};
-
-/**
- * 사용자의 온보딩 상태를 '완료'로 업데이트
- * @param {string} userId
- */
-export const completeOnboarding = async (userId) => {
-  const userRef = doc(db, 'users', userId);
-  await setDoc(userRef, { hasCompletedOnboarding: true }, { merge: true });
-};
-
 
 // --- 2. 카테고리 로직 ---
-
 /**
  * 사용자의 모든 카테고리를 가져오기
  * @param {string} userId
  * @returns {Promise<Array>} 카테고리 객체 배열
  */
 export const getUserCategories = async (userId) => {
-  const categoriesCol = collection(db, 'categories');
-  const q = query(categoriesCol, where('userId', '==', userId), orderBy('createdAt', 'asc'));
-  const querySnapshot = await getDocs(q);
-  return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  const sessionRef = doc(db, 'sessions', userId);
+  const sessionSnap = await getDoc(sessionRef);
+  if (sessionSnap.exists() && sessionSnap.data().categories) {
+    // Onboarding에서 저장한 카테고리 배열 반환
+    const categoryNames = sessionSnap.data().categories;
+  return categoryNames.map(name => ({ id: name, name: name }));
+  }
+  return [];
 };
 
 /**
@@ -92,10 +76,10 @@ export const getUserCategories = async (userId) => {
  * @param {string} categoryName 새 카테고리 이름
  */
 export const addCategory = async (userId, categoryName) => {
-  await addDoc(collection(db, 'users', userId, 'categories'), {
-    name: categoryName,
-    createdAt: serverTimestamp(),
-  });
+  const sessionRef = doc(db, 'sessions', userId);
+  await setDoc(sessionRef, {
+    categories: arrayUnion(categoryName.trim()) 
+  }, { merge: true });
 };
 
 /**
@@ -104,24 +88,15 @@ export const addCategory = async (userId, categoryName) => {
  * @param {Array<string>} categoryNames 추가할 카테고리 이름 배열
  */
 export const addInitialCategories = async (userId, categoryNames) => {
-    const batch = writeBatch(db);
-    const categoriesCol = collection(db, 'users', userId, 'categories');
-
-    categoryNames.forEach(name => {
-        const newCategoryRef = doc(categoriesCol);
-        batch.set(newCategoryRef, {
-            userId: userId,
-            name: name,
-            createdAt: serverTimestamp(),
-        });
-    });
-
-    await batch.commit();
+    const sessionRef = doc(db, 'sessions', userId);
+    await setDoc(sessionRef, {
+        categories: categoryNames,
+        createdAt: serverTimestamp(),
+        userId: userId
+    }, { merge: true });
 };
 
-
 // --- 3. 스크랩 로직 ---
-
 /**
  * 새로운 스크랩 추가
  * @param {string} userId
@@ -168,10 +143,6 @@ export const uploadImage = async (userId, file) => {
   const downloadURL = await getDownloadURL(storageRef);
   return downloadURL;
 };
-
-import { doc, deleteDoc } from 'firebase/firestore'; // deleteDoc import 추가
-
-// ... 기존 함수들 ...
 
 /**
  * ID를 이용해 스크랩 문서 삭제

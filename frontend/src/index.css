@@ -20,37 +20,6 @@ body {
   color: var(--text-primary);
 }
 
-/* --- Category Manager Modal Styles 에 추가 --- */
-
-/* 나의 카테고리 목록을 세로로 정렬 */
-.category-list-vertical {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* 관리 UI 내의 카테고리 아이템 */
-.category-item-wrapper-manage {
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* 양쪽 끝으로 정렬 */
-  background-color: var(--bg-secondary);
-  padding: 10px 15px;
-  border-radius: var(--border-radius);
-  border: 1px solid var(--border-color);
-  width: 100%;
-  box-sizing: border-box; /* 패딩 포함 크기 계산 */
-}
-
-/* 삭제 확인 UI 전체 컨테이너 */
-.delete-confirm-ui {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap; /* 작은 화면에서 줄바꿈 */
-  align-items: center;
-  gap: 10px;
-}
-
 .delete-confirm-label {
   flex-basis: 100%; /* 라벨은 항상 한 줄 전체 차지 */
   font-size: 0.9rem;
@@ -94,4 +63,111 @@ body {
   background-color: var(--bg-secondary);
   color: var(--text-primary);
   border: 1px solid var(--border-color);
+}
+
+.onboarding-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: var(--bg-secondary);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow);
+}
+
+/* 제목 폰트 크기 강조 */
+.onboarding-content h2 {
+  font-size: 1.75rem; /* 폰트 크기 키우기 */
+  font-weight: 700;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* 카테고리 박스 제목 스타일 */
+.category-box h3 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 15px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.category-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px; /* 태그 간 간격 */
+  margin-bottom: 25px;
+}
+
+/* 카테고리 태그 공통 스타일 */
+.category-item-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 8px 15px;
+  border-radius: var(--border-radius-lg); /* 태그를 둥글게 */
+  border: 1px solid var(--border-color);
+  font-size: 1rem; /* 폰트 크기 키우기 */
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: var(--bg-secondary);
+  font-weight: 500;
+}
+
+/* 선택된 나의 카테고리 스타일 */
+.category-item-wrapper.selected {
+  background-color: var(--accent-blue);
+  color: white;
+  border-color: var(--accent-blue);
+  padding-right: 18px; /* 텍스트 공간 확보 */
+}
+.category-item-wrapper.selected:hover {
+  background-color: #55aaff;
+}
+
+/* 추천 카테고리 '+' 버튼 스타일 */
+.plus-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0;
+  margin-right: 5px;
+  display: flex;
+  align-items: center;
+}
+
+/* 커스텀 추가 인풋 스타일 */
+.custom-add input[type="text"] {
+  border: none;
+  outline: none;
+  background: none;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+/* 완료하고 시작하기 버튼 스타일 강조 */
+.complete-button {
+  width: 100%;
+  padding: 15px 0;
+  margin-top: 30px;
+  font-size: 1.2rem; /* 폰트 크기 대폭 증가 */
+  font-weight: 700;
+  border-radius: var(--border-radius-lg); /* 매우 둥글게 */
+  border: none;
+  background-color: var(--accent-green);
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(163, 201, 168, 0.5);
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.complete-button:hover:not(:disabled) {
+  background-color: #8db592;
+}
+
+.complete-button:disabled {
+  background-color: var(--border-color);
+  color: var(--text-secondary);
+  cursor: not-allowed;
+  box-shadow: none;
 }

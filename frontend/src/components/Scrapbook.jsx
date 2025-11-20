@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { useAuthState } from '../hooks/useAuthState';
 import { getUserCategories, getScrapsByCategory, deleteScrap } from '../services/firestore';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiBook, FiImage, FiType, FiLink, FiYoutube, FiUsers } from 'react-icons/fi';
 import AddScrapForm from './AddScrapForm';
 import { FiPlusCircle } from 'react-icons/fi';
 import CategoryManager from './CategoryManager';
+import { getTemporaryUserId } from '../services/session';
 
 const scrapTypeIcons = {
   link: <FiLink />,
@@ -17,25 +17,24 @@ const scrapTypeIcons = {
 };
 
 function Scrapbook() {
-  const { user } = useAuthState();
   const [categories, setCategories] = useState([]);
   const [scraps, setScraps] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
-
+  const tempUserId = getTemporaryUserId();
   
-// 1. fetchCategories 함수를 useCallback을 이용해 컴포넌트 최상단에 정의합니다.
+// fetchCategories 함수를 useCallback을 이용해 컴포넌트 최상단에 정의
 const fetchCategories = useCallback(async () => {
-  if (!user) {
-    // 로그아웃 상태일 경우 카테고리 목록을 비웁니다.
-    setCategories([]);
-    return;
-  }
+  if (!tempUserId) { 
+    setCategories([]);
+    setIsLoading(false);
+    return;
+  }
   
   try {
-    const userCategories = await getUserCategories(user.uid);
-    setCategories(userCategories);
+    const userCategories = await getUserCategories(tempUserId); 
+    setCategories(userCategories);
     
     // 카테고리 삭제 또는 변경 후 선택된 ID가 유효하지 않을 때, 첫 번째 카테고리를 기본값으로 선택
     if (userCategories.length > 0 && !userCategories.find(c => c.id === selectedCategoryId)) {
@@ -48,21 +47,25 @@ const fetchCategories = useCallback(async () => {
   } catch (error) {
       console.error("카테고리를 불러오는 중 오류가 발생했습니다:", error);
   }
-}, [user, selectedCategoryId]);
+  setIsLoading(false);
+}, [tempUserId, selectedCategoryId]);
 
-// 2. useEffect를 사용해 함수를 실행합니다.
+// 초기 로딩
 useEffect(() => {
-  // 사용자 정보나 선택된 카테고리가 없으면 실행하지 않음
-  if (!user || !selectedCategoryId) {
-    setScraps([]);
-    return;
-  }
+    // 카테고리 로드 시작
+    fetchCategories(); 
+}, [fetchCategories]);
 
+// 스크랩 로딩
+useEffect(() => {
+  if (!tempUserId || !selectedCategoryId) {
+      setScraps([]);
+      return;
+    }
   const fetchScraps = async () => {
     setIsLoading(true);
     try {
-      // user.uid를 getScrapsByCategory 함수에 전달
-      const categoryScraps = await getScrapsByCategory(user.uid, selectedCategoryId);
+      const categoryScraps = await getScrapsByCategory(tempUserId, selectedCategoryId);
       setScraps(categoryScraps);
     } catch (error) {
       console.error("스크랩을 불러오는 중 오류가 발생했습니다:", error);
@@ -72,7 +75,15 @@ useEffect(() => {
   };
 
   fetchScraps();
-}, [user, selectedCategoryId]);
+}, [tempUserId, selectedCategoryId]);
+
+const selectedCategory = useMemo(() => {
+    // selectedCategoryId가 null이거나 categories 배열이 비어있으면 null 반환
+    if (!selectedCategoryId || categories.length === 0) return null; 
+    
+    // categories 배열에서 현재 ID와 일치하는 카테고리 객체 찾기
+    return categories.find(cat => cat.id === selectedCategoryId);
+}, [categories, selectedCategoryId]);
 
   const groupedScraps = useMemo(() => {
     return scraps.reduce((acc, scrap) => {
@@ -118,7 +129,7 @@ const handleDeleteScrap = async (scrapId) => {
         <AnimatePresence mode="wait">
           {isCategoryModalOpen && (
             <CategoryManager
-              user={user}
+              userId={tempUserId}
               currentCategories={categories}
               onClose={() => setIsCategoryModalOpen(false)}
               onUpdate={fetchCategories} // 카테고리 변경 후 목록 새로고침
@@ -129,7 +140,7 @@ const handleDeleteScrap = async (scrapId) => {
         {/* --- 스크랩 추가 폼 --- */}
         {selectedCategory && (
           <AddScrapForm
-            user={user}
+            userId={tempUserId}
             categoryId={selectedCategoryId}
             onScrapAdded={refreshScraps}
           />
