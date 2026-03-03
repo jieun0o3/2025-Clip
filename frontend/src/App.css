@@ -742,6 +742,7 @@
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 0.95rem;
+  box-sizing: border-box;
 }
 
 .text-area {
@@ -834,14 +835,12 @@
 }
 
 /* --- 이미지 스크랩 전용 2단 레이아웃 --- */
-
 .image-layout {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   gap: 12px;
 }
 
-/* 아래 스타일은 그대로 유지 */
 .image-layout .scrap-card-enhanced {
   width: 100%;
   margin-bottom: 0;
@@ -864,7 +863,7 @@
 .image-layout .scrap-card-enhanced {
   width: 100%;
   margin-bottom: 0;
-  height: 100%; /* 높이 맞춤 */
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -874,9 +873,10 @@
 }
 .image-layout .image-thumbnail-wrapper {
   width: 100%;
-  aspect-ratio: 1 / 1; /* 정사각형 비율 강제 */
-  height: auto; /* 높이 자동 계산 */
+  aspect-ratio: 1 / 1;
+  height: auto;
 }
+/* 모바일 반응형 */
 /* --- 이미지 스크랩 반응형 --- */
 @media (max-width: 768px) {
   .image-layout {
@@ -964,4 +964,18 @@
   color: white;
   font-size: 2rem;
   cursor: pointer;
+}
+/* --- AddScrapForm 모바일 반응형 추가 --- */
+@media (max-width: 600px) {
+  /* 모바일에서는 컨테이너 여백을 줄여서 입력 공간 확보 */
+  .add-scrap-container {
+    padding: 0.75rem; 
+    margin-bottom: 1.5rem;
+  }
+
+  /* 모바일에서 입력창 글씨 크기 최적화 (iOS 확대 방지) */
+  .common-input, .url-input, .text-area {
+    font-size: 16px; 
+    padding: 10px;
+  }
 }
