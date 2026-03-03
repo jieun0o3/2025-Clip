@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiBook, FiImage, FiType, FiLink, FiYoutube, FiUsers, FiX } from 'react-icons/fi';
+import { FiBook, FiImage, FiType, FiLink, FiYoutube, FiUsers, FiX, FiFileText, FiMaximize2 } from 'react-icons/fi';
 import { collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
 import { getUserCategories, deleteScrap } from '../services/firestore';
 import { getTemporaryUserId } from '../services/session';
@@ -25,6 +25,7 @@ function Scrapbook() {
   const [isLoading, setIsLoading] = useState(true);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const tempUserId = getTemporaryUserId();
+  const [expandedImage, setExpandedImage] = useState(null);
   
   // 카테고리 불러오기
   const fetchCategories = useCallback(async () => {
@@ -107,6 +108,31 @@ function Scrapbook() {
 
   return (
     <div className="scrapbook-container">
+      <AnimatePresence>
+        {expandedImage && (
+          <motion.div 
+            className="image-lightbox-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setExpandedImage(null)}
+          >
+            <motion.img 
+              src={expandedImage} 
+              alt="Expanded" 
+              className="lightbox-image"
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
+              onClick={(e) => e.stopPropagation()} // 이미지 클릭 시 닫히지 않게
+            />
+            <button className="lightbox-close-btn" onClick={() => setExpandedImage(null)}>
+              <FiX />
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <section className="main-content room-view">
         {/* 상단 카테고리 탭 */}
         <div className="category-tabs">
@@ -134,6 +160,7 @@ function Scrapbook() {
             />
           )}
         </AnimatePresence>
+        
 
         {/* 스크랩 추가 폼 */}
         {selectedCategory && (
@@ -162,11 +189,11 @@ function Scrapbook() {
               >
                 <div className="room-item-header">
                   {scrapTypeIcons[type] || scrapTypeIcons.default}
-                  <h3>{type.charAt(0).toUpperCase() + type.slice(1)}</h3>
+                  <h3>{type === 'link' ? 'Link' : type === 'image' ? 'Image' : 'Text'}</h3>
                   <span>{items.length}</span>
                 </div>
                 
-                <div className="room-item-scraps">
+                <div className={`room-item-scraps ${type}-layout`}>
                   <AnimatePresence>
                     {items.map(scrap => (
                       <motion.div 
@@ -178,6 +205,11 @@ function Scrapbook() {
                         transition={{ type: "spring", stiffness: 300, damping: 25 }}
                         layout
                       >
+                      {/* --- 타입별 렌더링 분기 --- */}
+                      
+                      {/* 1. 링크 타입 */}
+                      {type === 'link' && (
+                        <>
                         <div className="card-left">
                           <img 
                             /* 플레이스토어 아이콘 방지를 위한 북마크 파비콘 API 주소 적용 */
@@ -200,6 +232,49 @@ function Scrapbook() {
                             <FiX />
                           </button>
                         </div>
+                        </>
+                        )}
+
+                        {/* 2. 이미지 타입 */}
+                      {type === 'image' && (
+                        <div className="image-card-content">
+                          <div 
+                            className="image-thumbnail-wrapper" 
+                            onClick={() => setExpandedImage(scrap.data.imageUrl)}
+                          >
+                            <img src={scrap.data.imageUrl} alt="scrap" className="image-thumbnail" />
+                            <div className="hover-overlay"><FiMaximize2 /></div>
+                          </div>
+                          <div className="card-main">
+                             <div className="card-info">
+                                <span className="card-text-title">{scrap.data.title}</span>
+                                <span className="card-date">{new Date(scrap.createdAt?.seconds * 1000).toLocaleDateString()}</span>
+                             </div>
+                             <button onClick={() => handleDeleteScrap(scrap.id)} className="card-delete-btn-new">
+                            <FiX />
+                          </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 3. 텍스트 타입 */}
+                      {type === 'text' && (
+                        <>
+                          <div className="card-left">
+                            <FiFileText className="text-icon" />
+                          </div>
+                          <div className="card-main">
+                             <div className="card-info">
+                                <span className="card-text-content">{scrap.data.content}</span>
+                                {scrap.data.memo && <span className="card-memo-sub">{scrap.data.memo}</span>}
+                             </div>
+                             <button onClick={() => handleDeleteScrap(scrap.id)} className="card-delete-btn-new">
+                            <FiX />
+                          </button>
+                          </div>
+                        </>
+                      )}
+
                       </motion.div>
                     ))}
                   </AnimatePresence>

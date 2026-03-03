@@ -99,19 +99,16 @@
   margin-bottom: 2rem;
   text-align: center;
 }
-/* 스크랩 유형 하나라 레이아웃 flex로 임시 변경 */
-/* .room-layout {
+
+.room-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
-} */
- .room-layout {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-  gap: 1.5rem;
+  
+  width: 100%;       
+  max-width: none; 
+  margin: 0;       
+  padding-bottom: 50px; 
 }
 .room-item-container {
   background: var(--bg-secondary);
@@ -689,4 +686,282 @@
     cursor: pointer;
     color: #666;
     font-weight: bold;
+}
+
+/* --- AddScrapForm 탭 스타일 --- */
+.add-scrap-container {
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-color);
+}
+
+.scrap-type-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.type-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #888;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.type-tab.active {
+  background-color: #e7f5ff;
+  color: #007aff;
+}
+
+.type-tab:hover {
+  background-color: #f1f3f5;
+}
+
+/* 입력 폼 스타일 */
+.add-scrap-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.common-input, .url-input, .text-area {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.text-area {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.save-btn {
+  align-self: flex-end;
+  background-color: #007aff;
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;}
+
+.save-btn:hover {
+  background-color: #0056b3;
+}
+
+/* 파일 업로드 영역 */
+.upload-box {
+  border: 2px dashed #ddd;
+  padding: 2rem;
+  text-align: center;
+  border-radius: 8px;
+  color: #aaa;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.upload-box:hover {
+  border-color: #007aff;
+  color: #007aff;
+}
+
+.preview-box {
+  position: relative;
+  display: inline-block;
+}
+
+.preview-box img {
+  max-height: 150px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.remove-file-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- 이미지 스크랩 카드 스타일 --- */
+.image-card-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.image-thumbnail-wrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  border: 1px solid #eee;
+}
+
+.image-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+/* --- 이미지 스크랩 전용 2단 레이아웃 --- */
+
+.image-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 12px;
+}
+
+/* 아래 스타일은 그대로 유지 */
+.image-layout .scrap-card-enhanced {
+  width: 100%;
+  margin-bottom: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-layout .image-card-content {
+  height: 100%;
+  justify-content: space-between;
+}
+
+.image-layout .image-thumbnail-wrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  height: auto;
+}
+
+.image-layout .scrap-card-enhanced {
+  width: 100%;
+  margin-bottom: 0;
+  height: 100%; /* 높이 맞춤 */
+  display: flex;
+  flex-direction: column;
+}
+.image-layout .image-card-content {
+  height: 100%;
+  justify-content: space-between;
+}
+.image-layout .image-thumbnail-wrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1; /* 정사각형 비율 강제 */
+  height: auto; /* 높이 자동 계산 */
+}
+/* --- 이미지 스크랩 반응형 --- */
+@media (max-width: 768px) {
+  .image-layout {
+    grid-template-columns: 1fr; /* 한 줄에 하나씩 */
+  }
+}
+@media (max-width: 600px) {
+  .room-layout {
+    grid-template-columns: 1fr; /* 전체 섹션도 세로로 길게 나열 */
+  }
+}
+
+.hover-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.image-thumbnail-wrapper:hover .hover-overlay {
+  opacity: 1;
+}
+.image-thumbnail-wrapper:hover .image-thumbnail {
+  transform: scale(1.05);
+}
+
+.card-text-title {
+  font-weight: 600;
+  color: #333;
+  display: block;
+}
+.card-date {
+  font-size: 0.75rem;
+  color: #aaa;
+}
+
+/* 텍스트 스크랩 스타일 */
+.text-icon {
+  font-size: 1.5rem;
+  color: #888;
+  margin-right: 12px;
+}
+.card-text-content {
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* --- 라이트박스 (이미지 확대 모달) --- */
+.image-lightbox-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  cursor: pointer;
+}
+
+.lightbox-image {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  cursor: default;
+}
+
+.lightbox-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
 }
