@@ -31,7 +31,6 @@
 }
 
 /* Intro-container */
-/* --- Intro 화면 중앙 정렬 및 디자인 --- */
 .intro-container {
     display: flex;
     justify-content: center;
@@ -49,15 +48,21 @@
     box-shadow: var(--shadow);
 }
 
-/* 로고 스타일링 */
-.intro-logo {
-    font-size: 4rem;
-    font-weight: 900;
-    color: var(--accent-blue);
-    margin-bottom: 20px;
+.intro-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
 }
 
-/* 제목 및 설명 폰트 크기 */
+.intro-logo-text {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--accent-blue);
+    line-height: 1;
+}
+
 .intro-title {
     font-size: 2rem;
     font-weight: 700;
@@ -77,9 +82,9 @@
     max-width: 300px;
     padding: 15px 0;
     margin-top: 30px;
-    font-size: 1.2rem; /* 폰트 크기 대폭 증가 */
+    font-size: 1.2rem;
     font-weight: 700;
-    border-radius: var(--border-radius-lg); /* 매우 둥글게 */
+    border-radius: var(--border-radius-lg);
     border: none;
     background-color: var(--accent-green);
     color: white;
@@ -94,9 +99,18 @@
   margin-bottom: 2rem;
   text-align: center;
 }
-.room-layout {
+/* 스크랩 유형 하나라 레이아웃 flex로 임시 변경 */
+/* .room-layout {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+} */
+ .room-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
   gap: 1.5rem;
 }
 .room-item-container {
@@ -135,13 +149,104 @@
   font-weight: 700;
 }
 
+/* --- 개별 스크랩 카드 영역 --- */
+.room-item-scraps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* 카드 간격 */
+}
+
+/* 추가 시 애니메이션이 적용될 개별 카드 컨테이너 */
+.scrap-card-enhanced {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-main); /* 테마 변수 활용 */
+  padding: 12px 16px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  will-change: transform, opacity;
+}
+
+/* 링크 아이콘 크기 일정하게 고정 */
+.card-favicon {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background-color: transparent;
+  margin-right: 12px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.card-main {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 0;
+}
+
+.card-info {
+  flex: 1;
+  margin-right: 10px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* 링크 파란색 폰트 및 밑줄 제거 */
+.card-url-link {
+  display: block;
+  font-weight: 500;
+  color: var(--text-primary); /* 기존 테마의 메인 텍스트 색상 사용 */
+  text-decoration: none; /* 밑줄 제거 */
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* 글자가 길면 ... 처리 */
+}
+
+.card-url-link:hover {
+  text-decoration: none; /* 마우스 올렸을 때도 밑줄 안 생기게 유지 */
+}
+
+/* 하단 URL 호스트네임 */
+.card-url-path {
+  font-size: 0.75rem;
+  color: var(--text-secondary); /* 기존 테마의 서브 텍스트 색상 사용 */
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-delete-btn-new {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.card-delete-btn-new:hover {
+  color: #ff6b6b; /* 마우스를 올리면 빨간색으로 변경 */
+  transform: scale(1.15);
+}
+
 .category-tabs {
   display: flex;
   gap: 10px;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--border-color);
-  overflow-x: auto; /* 카테고리가 많아지면 가로 스크롤 */
+  overflow-x: auto;
 }
 .category-tab {
   padding: 8px 16px;
@@ -151,7 +256,7 @@
   color: var(--text-secondary);
   font-size: 0.9rem;
   cursor: pointer;
-  white-space: nowrap; /* 카테고리 이름 줄바꿈 방지 */
+  white-space: nowrap;
   transition: all 0.2s ease;
 }
 .category-tab:hover {
@@ -175,54 +280,155 @@
 .onboarding-container {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
-  padding-top: 5vh;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 20px;
 }
 .onboarding-content {
+  background: white;
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
   width: 100%;
-  max-width: 600px;
-  background: var(--bg-secondary);
-  padding: 2rem 2.5rem;
-  border-radius: var(--border-radius);
-  box-shadow: var(--shadow);
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
 }
-.onboarding-content h2 {
-  text-align: center;
-  margin-bottom: 2.5rem;
+.onboarding-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  color: #1a1a1a;
 }
-.category-box {
-  margin-bottom: 2rem;
+.category-section {
+  margin-bottom: 24px;
 }
-.category-box h3 {
-  margin: 0 0 1rem 0;
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--text-secondary);
+.category-section label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #888;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
-.category-list {
+.category-chip-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  min-height: 50px;
-  background: var(--bg-main);
-  padding: 1rem;
-  border-radius: var(--border-radius);
+  gap: 10px;
+  min-height: 40px;
 }
-.category-item-wrapper {
+.empty-msg {
+  font-size: 0.9rem;
+  color: #ccc;
+  font-style: italic;
+}
+.category-chip {
   display: flex;
   align-items: center;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  padding: 6px 8px 6px 6px;
-  font-size: 0.9rem;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 500;
   transition: all 0.2s ease;
+  border: none;
 }
-.category-item-wrapper.selected {
-  background-color: var(--accent-green);
-  border-color: var(--accent-green);
+.category-chip.selected {
+  background-color: #eef4ff;
+  color: #74C0FC;
+  border: 1px solid #d1e3ff;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  cursor: pointer;
+  color: #74C0FC;
+  border-radius: 50%;
+}
+
+.delete-btn:hover {
+  background-color: #dbeafe;
+}
+
+/* 추천 카테고리 */
+.category-chip.available {
+  background-color: white;
+  color: #555;
+  border: 1px solid #eee;
+  cursor: pointer;
+}
+
+.category-chip.available:hover {
+  border-color: #74C0FC;
+  color: #74C0FC;
+  background-color: #f0f7ff;
+}
+
+.category-chip .icon {
+  font-size: 0.8rem;
+}
+
+.custom-input-section {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 40px;
+}
+
+.custom-input-section input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  outline: none;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+.custom-input-section input:focus {
+  border-color: #74C0FC;
+}
+
+.custom-input-section .add-btn {
+  padding: 0 20px;
+  background-color: #333;
   color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
 }
+
+.start-button {
+  padding: 18px;
+  background-color: #74C0FC;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.start-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.start-button:not(:disabled):hover {
+  background-color: #74C0FC;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+}
+
 .plus-btn {
   display: flex;
   align-items: center;
@@ -280,6 +486,32 @@
   cursor: pointer;
 }
 
+.scrapbook-header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.manage-categories-btn {
+  padding: 0 15px;
+  height: 37px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  background-color: #9eaab5; 
+  color: white;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
 .scrap-item-card {
   background-color: var(--bg-main);
   padding: 1rem;
@@ -288,8 +520,8 @@
   transition: background-color 0.2s ease;
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; /* 버튼과 콘텐츠의 높이가 달라도 위쪽으로 정렬 */
-  gap: 1rem; /* 콘텐츠와 버튼 사이 간격 */
+  align-items: flex-start;
+  gap: 1rem;
 }
 
 .scrap-content {
@@ -307,7 +539,7 @@
   font-size: 1.2rem;
   color: var(--text-secondary);
   cursor: pointer;
-  flex-shrink: 0; /* 버튼 크기가 줄어들지 않도록 설정 */
+  flex-shrink: 0;
   transition: all 0.2s ease;
 }
 .delete-btn:hover {
@@ -347,135 +579,114 @@
   color: #ff6b6b;
 }
 
-/* --- Category Manager Modal Styles --- */
-
-/* 모달 뒷배경 */
-.modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(4px);
+/* --- CategoryManager --- */
+.modal-content-manage {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    width: 95%;
+    max-width: 400px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
 }
 
-/* 모달 본문 */
-.modal-content {
-  background-color: var(--bg-main);
-  padding: 2rem;
-  border-radius: var(--border-radius-large, 12px); /* 더 큰 border-radius가 어울릴 수 있음 */
-  box-shadow: var(--shadow-large, 0 10px 25px rgba(0,0,0,0.1));
-  width: 90%;
-  max-width: 500px;
-  border: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+.manage-section {
+    margin-bottom: 20px;
 }
 
-.modal-content h2 {
-  margin: 0;
-  color: var(--text-primary);
+.section-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #aaa;
+    margin-bottom: 10px;
+    text-transform: uppercase;
 }
 
-.category-box {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+.manage-chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
-.category-box h3 {
-  margin: 0;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-secondary);
+.manage-chip {
+    display: flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
 }
 
-.category-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
+.manage-chip.selected {
+    background: #f0f7ff;
+    color: #007aff;
+    border: 1px solid #cce4ff;
 }
 
-/* 현재 나의 카테고리 아이템 */
-.category-item-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: var(--bg-secondary);
-  padding: 8px 12px;
-  border-radius: var(--border-radius);
-  border: 1px solid var(--border-color);
+.manage-chip.available {
+    background: white;
+    border: 1px dashed #ddd;
+    color: #666;
+    cursor: pointer;
 }
 
-.delete-category-btn {
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  cursor: pointer;
-  color: var(--text-secondary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.delete-category-btn:hover {
-  color: #ff6b6b;
+.manage-chip.active-delete {
+    background: #fff0f0;
+    border: 1px solid #ffcccc;
+    width: 100%;
 }
 
-/* 추천 카테고리 칩 */
-.add-category-chip {
-  background-color: transparent;
-  border: 1px dashed var(--border-color);
-  color: var(--text-secondary);
-  padding: 8px 12px;
-  border-radius: 20px; /* 둥근 모양 */
-  cursor: pointer;
-  transition: all 0.2s ease;
+/* 삭제 로직 내 내부 UI */
+.delete-flow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+.flow-text { font-size: 0.8rem; color: #ff4d4d; font-weight: bold; }
+.flow-select { border: 1px solid #ddd; border-radius: 4px; padding: 2px 4px; font-size: 0.8rem; }
+.flow-confirm { background: #ff4d4d; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; }
+.flow-cancel { background: none; border: none; color: #999; cursor: pointer; display: flex; }
+
+.chip-delete-btn {
+    background: none;
+    border: none;
+    margin-left: 6px;
+    color: #007aff;
+    cursor: pointer;
+    display: flex;
 }
 
-.add-category-chip:hover {
-  border-color: var(--accent-blue);
-  color: var(--accent-blue);
-  background-color: rgba(79, 132, 255, 0.1);
+.manage-input-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
 }
 
-/* 새 카테고리 추가 폼 */
-.add-category-form {
-  display: flex;
-  gap: 10px;
+.manage-input-group input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 10px;
 }
 
-.add-category-form input {
-  flex-grow: 1;
-  padding: 12px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--border-radius);
-  font-size: 1rem;
-  background-color: var(--bg-secondary);
+.manage-input-group button {
+    padding: 0 15px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
 }
 
-.add-category-form button,
-.close-modal-btn {
-  padding: 0 20px;
-  height: 46px; /* input 높이와 맞춤 */
-  border: none;
-  border-radius: var(--border-radius);
-  background-color: var(--accent-blue);
-  color: white;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-/* 닫기 버튼 스타일 */
-.close-modal-btn {
-  background-color: var(--bg-secondary);
-  color: var(--text-primary);
-  border: 1px solid var(--border-color);
-  margin-top: 1rem;
+.manage-close-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    border: none;
+    background: #f5f5f5;
+    border-radius: 12px;
+    cursor: pointer;
+    color: #666;
+    font-weight: bold;
 }

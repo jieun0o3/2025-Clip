@@ -58,7 +58,6 @@ const handleStartClick = async () => {
 const tempUserId = getTemporaryUserId(); 
 
   try {
-    // db 객체와 collection, doc, setDoc 함수 사용
     const sessionDocRef = doc(db, 'sessions', tempUserId);
     
     await setDoc(sessionDocRef, {

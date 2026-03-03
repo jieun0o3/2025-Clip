@@ -12,7 +12,7 @@ function App() {
     <div className="app-container">
       <header className="app-header">
         <div className="logo">
-          <img src="/Clip_logo_ver1.jpg" alt="Clip Icon" />
+          <img src="/clip_logo.png" alt="Clip Icon" />
           <h1>Clip</h1>
         </div>
       </header>

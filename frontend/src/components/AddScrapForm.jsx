@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { addScrap } from '../services/firestore';
 
-function AddScrapForm({ user, categoryId, onScrapAdded }) {
+function AddScrapForm({ userId, categoryId, onScrapAdded }) {
   const [url, setUrl] = useState('');
   const [memo, setMemo] = useState('');
 
@@ -14,7 +14,7 @@ function AddScrapForm({ user, categoryId, onScrapAdded }) {
       data: { url, memo, title: url },
     };
 
-    await addScrap(user.uid, categoryId, scrapData);
+    await addScrap(userId, categoryId, scrapData);
     setUrl('');
     setMemo('');
     onScrapAdded(); // 스크랩 추가 완료 신호 보내기
