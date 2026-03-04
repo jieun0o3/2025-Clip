@@ -1,0 +1,33 @@
+# .github/workflows/deploy.yml
+
+name: Deploy to Firebase Hosting
+
+on:
+  push:
+    branches:
+      - main  # main 브랜치에 push될 때 실행됩니다.
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3  # 1. 레포지토리 코드 가져오기
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18' # 사용하는 Node.js 버전에 맞게 수정
+
+      - name: Install dependencies
+        run: npm ci # npm install 보다 빠르고 안정적입니다.
+
+      - name: Build
+        run: npm run build # React 앱 빌드
+
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_CLIP_PROJECT }}' # 2단계에서 설정한 Secret 이름
+          channelId: live
+          projectId: 'your-firebase-project-id' # 실제 Firebase 프로젝트 ID로 변경

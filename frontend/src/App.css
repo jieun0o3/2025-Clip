@@ -1,0 +1,1005 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+  flex-shrink: 0;
+}
+.logo { display: flex; align-items: center; gap: 0.5rem; }
+.logo img { width: 24px; height: 24px; }
+.logo h1 { font-size: 1.4rem; margin: 0; }
+.logout-button {
+  padding: 8px 16px;
+  background-color: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--primary-color);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+.app-main {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+/* Intro-container */
+.intro-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    text-align: center;
+    padding: 20px;
+}
+
+.intro-content {
+    max-width: 600px;
+    padding: 40px;
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow);
+}
+
+.intro-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.intro-logo-text {
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: var(--accent-blue);
+    line-height: 1;
+}
+
+.intro-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--text-primary);
+}
+
+.intro-description {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+}
+
+/* 시작하기 버튼 */
+.intro-start-button {
+    width: 100%;
+    max-width: 300px;
+    padding: 15px 0;
+    margin-top: 30px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: var(--border-radius-lg);
+    border: none;
+    background-color: var(--accent-green);
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(163, 201, 168, 0.5);
+    transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+/* --- Scrapbook View --- */
+.room-view h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.room-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  
+  width: 100%;       
+  max-width: none; 
+  margin: 0;       
+  padding-bottom: 50px; 
+}
+.room-item-container {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.room-item-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
+}
+.room-item-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+}
+.room-item-header svg {
+  font-size: 1.5rem;
+  color: var(--accent-blue);
+}
+.room-item-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  flex-grow: 1;
+}
+.room-item-header span {
+  background-color: var(--bg-main);
+  padding: 0.2rem 0.6rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* --- 개별 스크랩 카드 영역 --- */
+.room-item-scraps {
+  width: 100%;
+  box-sizing: border-box;
+  /* display: flex;
+  flex-direction: column;
+  gap: 12px; 카드 간격 */
+}
+
+/* 추가 시 애니메이션이 적용될 개별 카드 컨테이너 */
+.scrap-card-enhanced {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-main); /* 테마 변수 활용 */
+  padding: 12px 16px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  will-change: transform, opacity;
+}
+
+/* 링크 아이콘 크기 일정하게 고정 */
+.card-favicon {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  background-color: transparent;
+  margin-right: 12px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.card-main {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-width: 0;
+}
+
+.card-info {
+  flex: 1;
+  margin-right: 10px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* 링크 파란색 폰트 및 밑줄 제거 */
+.card-url-link {
+  display: block;
+  font-weight: 500;
+  color: var(--text-primary); /* 기존 테마의 메인 텍스트 색상 사용 */
+  text-decoration: none; /* 밑줄 제거 */
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* 글자가 길면 ... 처리 */
+}
+
+.card-url-link:hover {
+  text-decoration: none; /* 마우스 올렸을 때도 밑줄 안 생기게 유지 */
+}
+
+/* 하단 URL 호스트네임 */
+.card-url-path {
+  font-size: 0.75rem;
+  color: var(--text-secondary); /* 기존 테마의 서브 텍스트 색상 사용 */
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-delete-btn-new {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.card-delete-btn-new:hover {
+  color: #ff6b6b; /* 마우스를 올리면 빨간색으로 변경 */
+  transform: scale(1.15);
+}
+
+.category-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+  overflow-x: auto;
+}
+.category-tab {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+.category-tab:hover {
+  background-color: var(--bg-main);
+}
+.category-tab.active {
+  background-color: var(--accent-blue);
+  color: white;
+  border-color: var(--accent-blue);
+  font-weight: 500;
+}
+
+/* --- 반응형 UI --- */
+@media (max-width: 768px) {
+  .app-main { padding: 1rem; }
+  .app-header { padding: 1rem; }
+  .logo h1 { font-size: 1.2rem; }
+}
+
+/* --- Onboarding 개편 스타일 --- */
+.onboarding-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+.onboarding-content {
+  background: white;
+  padding: 40px;
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+}
+.onboarding-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  color: #1a1a1a;
+}
+.category-section {
+  margin-bottom: 24px;
+}
+.category-section label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #888;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.category-chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-height: 40px;
+}
+.empty-msg {
+  font-size: 0.9rem;
+  color: #ccc;
+  font-style: italic;
+}
+.category-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 50px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: none;
+}
+.category-chip.selected {
+  background-color: #eef4ff;
+  color: #74C0FC;
+  border: 1px solid #d1e3ff;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  cursor: pointer;
+  color: #74C0FC;
+  border-radius: 50%;
+}
+
+.delete-btn:hover {
+  background-color: #dbeafe;
+}
+
+/* 추천 카테고리 */
+.category-chip.available {
+  background-color: white;
+  color: #555;
+  border: 1px solid #eee;
+  cursor: pointer;
+}
+
+.category-chip.available:hover {
+  border-color: #74C0FC;
+  color: #74C0FC;
+  background-color: #f0f7ff;
+}
+
+.category-chip .icon {
+  font-size: 0.8rem;
+}
+
+.custom-input-section {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  margin-bottom: 40px;
+}
+
+.custom-input-section input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  outline: none;
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+}
+
+.custom-input-section input:focus {
+  border-color: #74C0FC;
+}
+
+.custom-input-section .add-btn {
+  padding: 0 20px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.start-button {
+  padding: 18px;
+  background-color: #74C0FC;
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.start-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.start-button:not(:disabled):hover {
+  background-color: #74C0FC;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+}
+
+.plus-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--bg-main);
+  color: var(--text-secondary);
+  margin-right: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.plus-btn:hover {
+  background-color: var(--accent-blue);
+  color: white;
+}
+.category-item-wrapper.custom-add input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+.complete-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* --- AddScrapForm & Scrap Item Card Styles --- */
+.add-scrap-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 2rem;
+  background-color: var(--bg-secondary);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+.add-scrap-form input {
+  flex-grow: 1;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+}
+.add-scrap-form button {
+  padding: 0 20px;
+  border: none;
+  border-radius: var(--border-radius);
+  background-color: var(--accent-blue);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.scrapbook-header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.manage-categories-btn {
+  padding: 0 15px;
+  height: 37px;
+  border: none;
+  border-radius: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  background-color: #9eaab5; 
+  color: white;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.scrap-item-card {
+  background-color: var(--bg-main);
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 0.75rem;
+  transition: background-color 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.scrap-content {
+  flex-grow: 1;
+}
+.delete-btn {
+  background: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+.delete-btn:hover {
+  background-color: #ff6b6b;
+  color: white;
+  border-color: #ff6b6b;
+}
+
+.scrap-item-card a {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 500;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+.scrap-item-card p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0.5rem 0 0 0;
+}
+
+.scrap-content {
+  flex-grow: 1;
+}
+.delete-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0 0.5rem;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+.delete-btn:hover {
+  opacity: 1;
+  color: #ff6b6b;
+}
+
+/* --- CategoryManager --- */
+.modal-content-manage {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    width: 95%;
+    max-width: 400px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.manage-section {
+    margin-bottom: 20px;
+}
+
+.section-label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #aaa;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+.manage-chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.manage-chip {
+    display: flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.manage-chip.selected {
+    background: #f0f7ff;
+    color: #007aff;
+    border: 1px solid #cce4ff;
+}
+
+.manage-chip.available {
+    background: white;
+    border: 1px dashed #ddd;
+    color: #666;
+    cursor: pointer;
+}
+
+.manage-chip.active-delete {
+    background: #fff0f0;
+    border: 1px solid #ffcccc;
+    width: 100%;
+}
+
+/* 삭제 로직 내 내부 UI */
+.delete-flow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+.flow-text { font-size: 0.8rem; color: #ff4d4d; font-weight: bold; }
+.flow-select { border: 1px solid #ddd; border-radius: 4px; padding: 2px 4px; font-size: 0.8rem; }
+.flow-confirm { background: #ff4d4d; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; }
+.flow-cancel { background: none; border: none; color: #999; cursor: pointer; display: flex; }
+
+.chip-delete-btn {
+    background: none;
+    border: none;
+    margin-left: 6px;
+    color: #007aff;
+    cursor: pointer;
+    display: flex;
+}
+
+.manage-input-group {
+    display: flex;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.manage-input-group input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #eee;
+    border-radius: 10px;
+}
+
+.manage-input-group button {
+    padding: 0 15px;
+    background: #333;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.manage-close-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    border: none;
+    background: #f5f5f5;
+    border-radius: 12px;
+    cursor: pointer;
+    color: #666;
+    font-weight: bold;
+}
+
+/* --- AddScrapForm 탭 스타일 --- */
+.add-scrap-container {
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  padding: 1rem;
+  box-shadow: var(--shadow);
+  margin-bottom: 2rem;
+  border: 1px solid var(--border-color);
+}
+
+.scrap-type-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 0.5rem;
+}
+
+.type-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #888;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.type-tab.active {
+  background-color: #e7f5ff;
+  color: #007aff;
+}
+
+.type-tab:hover {
+  background-color: #f1f3f5;
+}
+
+/* 입력 폼 스타일 */
+.add-scrap-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.common-input, .url-input, .text-area {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+}
+
+.text-area {
+  resize: vertical;
+  font-family: inherit;
+}
+
+.save-btn {
+  align-self: flex-end;
+  background-color: #007aff;
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;}
+
+.save-btn:hover {
+  background-color: #0056b3;
+}
+
+/* 파일 업로드 영역 */
+.upload-box {
+  border: 2px dashed #ddd;
+  padding: 2rem;
+  text-align: center;
+  border-radius: 8px;
+  color: #aaa;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.upload-box:hover {
+  border-color: #007aff;
+  color: #007aff;
+}
+
+.preview-box {
+  position: relative;
+  display: inline-block;
+}
+
+.preview-box img {
+  max-height: 150px;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+.remove-file-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+
+  padding: 0 !important; 
+  margin: 0 !important;
+  min-width: auto !important;
+
+  background-color: #adb5bd !important;
+  color: white;           
+  border: none;
+  width: 20px;
+  height: 20px;      
+  border-radius: 6px;
+  
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 20;
+  transition: background-color 0.2s;
+}
+.remove-file-btn:hover {
+  background-color: #495057;
+}
+
+/* --- 이미지 스크랩 카드 스타일 --- */
+.image-card-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.image-thumbnail-wrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  border: 1px solid #eee;
+}
+
+.image-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+/* --- 이미지 스크랩 전용 2단 레이아웃 --- */
+.image-layout {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.image-layout .scrap-card-enhanced {
+  width: 100%;
+  margin-bottom: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.image-layout .image-card-content {
+  height: 100%;
+  justify-content: space-between;
+  flex-direction: column; /* 세로 배치 */
+  justify-content: space-between;
+}
+
+.image-layout .image-thumbnail-wrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  height: auto;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.image-layout .scrap-card-enhanced {
+  width: 100%;
+  margin-bottom: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.image-layout .image-card-content {
+  height: 100%;
+  justify-content: space-between;
+}
+.image-layout .image-thumbnail-wrapper {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  height: auto;
+}
+/* 모바일 반응형 */
+/* --- 이미지 스크랩 반응형 --- */
+@media (max-width: 768px) {
+  .image-layout {
+    grid-template-columns: 1fr; /* 한 줄에 하나씩 */
+  }
+}
+@media (max-width: 600px) {
+  .room-layout {
+    grid-template-columns: 1fr; /* 전체 섹션도 세로로 길게 나열 */
+  }
+}
+
+.hover-overlay {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.image-thumbnail-wrapper:hover .hover-overlay {
+  opacity: 1;
+}
+.image-thumbnail-wrapper:hover .image-thumbnail {
+  transform: scale(1.05);
+}
+
+.card-text-title {
+  font-weight: 600;
+  color: #333;
+  display: block;
+}
+.card-date {
+  font-size: 0.75rem;
+  color: #aaa;
+}
+
+/* 텍스트 스크랩 스타일 */
+.text-icon {
+  font-size: 1.5rem;
+  color: #888;
+  margin-right: 12px;
+}
+.card-text-content {
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* --- 라이트박스 (이미지 확대 모달) --- */
+.image-lightbox-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  cursor: pointer;
+}
+
+.lightbox-image {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  cursor: default;
+}
+
+.lightbox-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+}
+/* --- AddScrapForm 모바일 반응형 추가 --- */
+@media (max-width: 600px) {
+  /* 모바일에서는 컨테이너 여백을 줄여서 입력 공간 확보 */
+  .add-scrap-container {
+    padding: 0.75rem; 
+    margin-bottom: 1.5rem;
+  }
+
+  /* 모바일에서 입력창 글씨 크기 최적화 (iOS 확대 방지) */
+  .common-input, .url-input, .text-area {
+    font-size: 16px; 
+    padding: 10px;
+  }
+}
